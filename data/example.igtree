@@ -1,0 +1,92 @@
+# Status: pruned
+# Permutation: < 1, 2, 3, 4, 5 >
+# Numeric: .
+# Bin_Size: 20
+# Version 4 (Hashed)
+#
+Classes
+1	_
+2	dit_is_een_document
+3	met_allerlei_stukje_taal
+4	berichten_eigenlijk
+5	alsof_je_in_een_moba
+6	chat_zit_te_turen
+7	en_te_kijken_naar
+8	wat_iedereen_zegt
+9	en_op_deze_manier
+10	heb_ik_een_serie
+11	van_korte_berichten_achter_elkaar
+12	sommige_zijn_wat_langer_overigens
+13	waarmee_ik_kan_kijken
+14	of_mijn
+15	scripts_het_juiste
+16	type_model
+Features
+1	dit
+2	is
+3	een
+4	document
+5	_
+6	met
+7	allerlei
+8	stukje
+9	taal
+10	berichten
+11	eigenlijk
+12	alsof
+13	je
+14	in
+15	moba
+16	chat
+17	zit
+18	te
+19	turen
+20	en
+21	kijken
+22	naar
+23	wat
+24	iedereen
+25	zegt
+26	op
+27	deze
+28	manier
+29	heb
+30	ik
+31	serie
+32	van
+33	korte
+34	achter
+35	elkaar
+36	sommige
+37	zijn
+38	langer
+39	overigens
+40	waarmee
+41	kan
+42	of
+43	mijn
+44	scripts
+45	het
+46	juiste
+47	type
+48	model
+49	opbouwen
+
+(1{ 1 1, 2 1, 3 1, 4 1, 5 1, 6 1, 7 1, 8 1, 9 1, 10 1, 11 1, 12 1, 13 1, 14 1, 15 1, 16 1 }[6(2)
+,10(3)
+,12(4)
+,16(5)
+,20(6[26(8)
+]
+)
+,23(7)
+,29(9)
+,32(10)
+,36(11)
+,40(12)
+,42(13)
+,44(14)
+,47(15)
+,49(16)
+]
+)
