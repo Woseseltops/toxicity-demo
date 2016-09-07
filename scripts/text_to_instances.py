@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     last_message = ['_']
     instances = []
-    for n, words in enumerate(split_messages):
+    for n, words in enumerate(reversed(split_messages)):
         features = add_items_to_list_until_length(copy(words),'_',longest_message)
         classname = '_'.join(last_message)
         instances.append(Instance(features,classname))
