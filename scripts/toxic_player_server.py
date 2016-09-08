@@ -55,5 +55,12 @@ class ToxicPlayerServer(object):
         self.chat_sockets[socket_label].sendall(message.encode())
         return self.chat_sockets[socket_label].recv(1024).decode()[10:-2]
 
-cherrypy.config.update({'server.socket_port': 7077})
-cherrypy.quickstart(ToxicPlayerServer())
+STANDALONE = False
+
+if STANDALONE:
+    cherrypy.config.update({'server.socket_port': 7077})
+    cherrypy.quickstart(ToxicPlayerServer())
+else:
+    cherrypy.config.update({'environment': 'embedded'})
+    application = cherrypy.Application(ToxicPlayerServer(), script_name='/toxicity', config=None)
+
