@@ -70,6 +70,7 @@ if __name__ == '__main__':
     OUTPUT_FOLDER = '/home/wstoop/toxicity-demo/data/'
 
     MAXIMUM_CHAT_LENGTH = 20
+    PERCENTAGE_OF_TOTAL_DATASET_TO_PROCESS = 0.05
 
     normal_instance_file = open(OUTPUT_FOLDER+'normal_chat.inst','w')
     toxic_instance_file = open(OUTPUT_FOLDER+'toxic_chat.inst','w')
@@ -79,7 +80,11 @@ if __name__ == '__main__':
     for n,filename in enumerate(os.listdir(INPUT_PATH)):
 
         if n%100 == 0:
-            print(n/nr_of_files,'%')
+            percentage = n/nr_of_files
+            print(percentage,'%')
+
+            if percentage > PERCENTAGE_OF_TOTAL_DATASET_TO_PROCESS:
+                break
 
         normal_instances, toxic_instances = import_lol_data_file(INPUT_PATH+filename,MAXIMUM_CHAT_LENGTH)
 
@@ -88,7 +93,3 @@ if __name__ == '__main__':
 
         for instance in toxic_instances:
             toxic_instance_file.write(instance.get_timbl_str()+'\n')
-
-#TODO
-# Skip long sentences
-# glue meerdere dingen together

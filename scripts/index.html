@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Toxic player simulation</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+    $("#sendbutton").click(function()
+    {
+        var new_chat_message = $('#chat_message_to_send').val();
+        $('#chatlog').append('<p>You: '+new_chat_message+'</p>');
+    });
+});
+</script>
+
+</head>
+
+<body>
+<h1>Toxix player simulation</h1>
+<p>Multiple online battle arena (MOBA) is a genre in videogames that has serious problems with so-called 'toxic players'.
+    These players misbehave both in game and on the ingame chat, for example by offending teammates. We study the linguistic
+    behaviour of these toxic players.</p>
+<p>This webdemo follows from that study; we simulate what the average normal versus the average toxic player would say.
+    It was trained on tribunal data from the game Leaguage of Legends by developer Riot Games. We would also like to include data
+    from the game DOTA2 by developer Valve.</p>
+
+<input id="chat_message_to_send"><input value="Send" type="button" id="sendbutton">
+
+<div id="chatlog">
+</div>
+
+</body>
+
+</html>
