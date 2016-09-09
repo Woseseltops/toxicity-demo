@@ -27,6 +27,7 @@ class ToxicPlayerServer(object):
         for socket_label in ['toxic','normal']:
 
             self.chat_sockets[socket_label] = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.chat_sockets[socket_label].settimeout(120)
 
             while retry > 0:
                 retry -= 1
@@ -45,6 +46,7 @@ class ToxicPlayerServer(object):
 
     def send_to_timbl(self, socket_label, words_to_classify):
 
+        #Sending
         number_of_words = len(words_to_classify.split())
         while number_of_words < 20:
             words_to_classify += ' _'
@@ -53,12 +55,24 @@ class ToxicPlayerServer(object):
         message = 'c '+words_to_classify+' ?\n'
 
         self.chat_sockets[socket_label].sendall(message.encode())
-        return self.chat_sockets[socket_label].recv(1024).decode()[10:-2]
+
+        #Receiving
+        receiving_content = True
+        buffer = b''
+        while receiving_content:
+            chunk = self.chat_sockets[socket_label].recv(1024)
+            print(str(chunk[-1]) == '\n')
+            if not chunk or str(chunk[-1]) == '\n': #newline
+                receiving_content = False
+            buffer += chunk
+
+        print(buffer.decode()) #this code does nothing, but interestingly this prevents us from getting back old answers
+        return buffer.decode()[10:-2]
 
 STANDALONE = False
 
 if STANDALONE:
-    cherrypy.config.update({'server.socket_port': 7077})
+    cherrypy.config.update({'server.socket_port': 7076})
     cherrypy.quickstart(ToxicPlayerServer())
 else:
     cherrypy.config.update({'environment': 'embedded'})
