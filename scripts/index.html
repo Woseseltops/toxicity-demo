@@ -6,11 +6,28 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
-    $("#sendbutton").click(function()
+    function send_chat_message()
     {
         var new_chat_message = $('#chat_message_to_send').val();
-        $('#chatlog').append('<p>You: '+new_chat_message+'</p>');
-    });
+        $('#chatlog').append('<tr><td><em>You</em></td><td>'+new_chat_message+'</td><td><em>You</em></td><td>'+new_chat_message+'</td></tr>');
+	
+		$.get('/toxicity-server/predict/'+new_chat_message,function(data)
+		{
+			answers = data.replace(/_/g,' ').split('\t');
+	        $('#chatlog').append('<tr><td><em>Toxic player</em></td><td><strong>'+answers[0]+'</strong></td><td><em>Normal player</em></td><td><strong>'+answers[1]+'</strong></td></tr>');
+		});
+
+		$('#chat_message_to_send').val('');
+    }
+
+    $("#sendbutton").click(send_chat_message);
+    $(document).keypress(function(e) 
+	{
+		if (e.which == 13)
+		{
+			send_chat_message();
+		}
+	});
 });
 </script>
 
@@ -25,8 +42,8 @@ $(document).ready(function()
 
 <input id="chat_message_to_send"><input value="Send" type="button" id="sendbutton">
 
-<div id="chatlog">
-</div>
+<table id="chatlog">
+</table>
 
 </body>
 
