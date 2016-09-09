@@ -62,5 +62,5 @@ if STANDALONE:
     cherrypy.quickstart(ToxicPlayerServer())
 else:
     cherrypy.config.update({'environment': 'embedded'})
-    application = cherrypy.Application(ToxicPlayerServer(), script_name='/toxicity', config=None)
+    application = cherrypy.Application(ToxicPlayerServer(), script_name='/toxicity-server', config=None)
 
