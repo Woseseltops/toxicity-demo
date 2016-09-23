@@ -56,6 +56,8 @@ class ToxicPlayerServer(object):
 
         self.chat_sockets[socket_label].sendall(message.encode())
 
+        time.sleep(0.5)
+
         #Receiving
         receiving_content = True
         buffer = b''
@@ -66,7 +68,6 @@ class ToxicPlayerServer(object):
                 receiving_content = False
             buffer += chunk
 
-        print(buffer.decode()) #this code does nothing, but interestingly this prevents us from getting back old answers
         return buffer.decode()[10:-2]
 
 STANDALONE = False
