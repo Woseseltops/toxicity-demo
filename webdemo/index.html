@@ -9,6 +9,8 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
+    var nr_of_chats_to_show = 6;
+
     var user_messages = [];
     var toxic_answers = [];
     var normal_answers = [];
@@ -28,19 +30,29 @@ $(document).ready(function()
         if (user_messages.length > normal_answers.length)
         {
             correction_when_no_answer_yet = 1;
-            result = '<tr><td>You</td><td>'+message_times[0]+'</td><td>'+user_messages[0]+'</td><td>You</td><td>'+message_times[0]+'</td><td>'+user_messages[0]+'</td></tr>'+result;
+            result = '<tr><td class="timecell">'+message_times[0]+'</td><td class="namecell you">You</td><td class="message_cell">'+user_messages[0]+'</td><td class="timecell">'+message_times[0]+'</td><td class="namecell you">You</td><td class="message_cell">'+user_messages[0]+'</td></tr>'+result;
         }
 
-        for (var i = 0;i<10;i++)
+        for (var i = 0;i<nr_of_chats_to_show;i++)
         {
+            if (i+correction_when_no_answer_yet < nr_of_chats_to_show)
+            {
+                if (i < normal_answers.length)
+                {
+                    result = '<tr><td class="timecell">'+message_times[i]+'</td><td class="namecell normal_player">JohnSmith123 (Character):</td><td class="message_cell">'+normal_answers[i]+'</td><td class="timecell">'+message_times[i]+'</td><td class="namecell toxic_player">t0x!cPl4y0r (Character):</td><td class="message_cell">'+toxic_answers[i]+'</td></tr>'+result;
+                }
+                else
+                {
+                    result = '<tr><td class="timecell"></td><td class="namecell"></td><td class="message_cell"></td><td class="timecell"></td><td class="namecell"></td><td class="message_cell"></td></tr>'+result;
+                }
+            }
+
             if (i+correction_when_no_answer_yet < user_messages.length)
             {
-                result = '<tr><td>Normal player</td><td>'+message_times[i]+'</td><td>'+normal_answers[i]+'</td><td>Toxic player</td><td>'+message_times[i]+'</td><td>'+toxic_answers[i]+'</td></tr>'+result;
-                result = '<tr><td>You</td><td>'+message_times[i+correction_when_no_answer_yet]+'</td><td>'+user_messages[i+correction_when_no_answer_yet]+'</td><td>You</td><td>'+message_times[i+correction_when_no_answer_yet]+'</td><td>'+user_messages[i+correction_when_no_answer_yet]+'</td></tr>'+result;
+                result = '<tr><td class="timecell">'+message_times[i+correction_when_no_answer_yet]+'</td><td class="namecell you">You:</td><td class="message_cell">'+user_messages[i+correction_when_no_answer_yet]+'</td><td class="timecell">'+message_times[i+correction_when_no_answer_yet]+'</td><td class="namecell you">You:</td><td  class="message_cell">'+user_messages[i+correction_when_no_answer_yet]+'</td></tr>'+result;
             }
             else
             {
-                result = '<tr><td> </td><td></td><td></td><td></td><td></td><td></td></tr>'+result;
                 result = '<tr><td> </td><td></td><td></td><td></td><td></td><td></td></tr>'+result;
             }
         }
@@ -50,16 +62,18 @@ $(document).ready(function()
         toxic_answers.reverse();
         message_times.reverse();
 
-        return result;
+        return '<tr><th colspan=3>What a normal player would say</th><th colspan=3>What a toxic player would say</th></tr>'+result;
     }
 
     function send_chat_message()
     {
-        var new_chat_message = $('#chat_message_to_send').val();
+        var new_chat_message = $('input').val();
         user_messages.push(new_chat_message);
 
         var d = new Date();
-        message_times.push(d.getHours()+':'+d.getMinutes());
+        var h = '0'+d.getHours();
+        var m = '0'+d.getMinutes();
+        message_times.push(h.slice(-2)+':'+m.slice(-2));
 
         new_table = build_table_for_answers(user_messages,normal_answers,toxic_answers,message_times);
         $('#chatlog').html(new_table);
@@ -67,6 +81,17 @@ $(document).ready(function()
 		$.get('/toxicity-server/predict/'+new_chat_message,function(data)
 		{
 			answers = data.replace(/_/g,' ').split('\t');
+
+            if (answers[0] == 'gg')
+            {
+                answers[0] = '<span class="nothing">- nothing -</span>';
+            }
+
+            if (answers[1] == 'gg')
+            {
+                answers[1] = '<span class="nothing">- nothing -</span>';
+            }
+
 	        toxic_answers.push(answers[0]);
             normal_answers.push(answers[1]);
 
@@ -74,13 +99,16 @@ $(document).ready(function()
             $('#chatlog').html(new_table);
 		});
 
-		$('#chat_message_to_send').val('');
+		$('input').val('');
     }
+
+    new_table = build_table_for_answers(user_messages,normal_answers,toxic_answers,message_times);
+    $('#chatlog').html(new_table);
 
     $("#sendbutton").click(send_chat_message);
     $(document).keypress(function(e) 
 	{
-		if (e.which == 13)
+	 	if (e.which == 13)
 		{
 			send_chat_message();
 		}
@@ -91,19 +119,22 @@ $(document).ready(function()
 </head>
 
 <body>
-<h1>Talking toxic</h1>
+<img src="logo.png">
 <div class="main_description">
-    <p>Multiple online battle arenas (MOBA) are a genre in videogames that is currently very popular: both <em>DOTA2</em> by Valve and <em>League of Legends</em> by Riot Games report many millions of unique players per month. The genre however has severe problems with so-called 'toxic players'. These players deliberately insult or harass teammates and/or opponents, thereby ruining the game for all other players in the match. Multiple MOBA developers have spoken about <a href="http://www.riotgames.com/articles/20121013/274/how-science-helps-detoxify-player-behavior">their</a> <a href="https://youtu.be/HQwL6zh7AgA?t=33m57s">attempts</a> to change this behaviour.</p>
+    <p>Multiplayer online battle arenas (MOBA) are a genre in videogames that is currently very popular: both <em>DOTA2</em> by Valve and <em>League of Legends</em> by Riot Games report many millions of unique players per month. The genre however has severe problems with so-called 'toxic players'. These players deliberately insult or harass teammates and/or opponents, thereby ruining the game for all other players in the match. Multiple MOBA developers have spoken about <a href="http://www.riotgames.com/articles/20121013/274/how-science-helps-detoxify-player-behavior">their</a> <a href="https://youtu.be/HQwL6zh7AgA?t=33m57s">attempts</a> to change this behaviour.</p>
     <p>We study the linguistic behaviour of these toxic players. This webdemo follows from that study; we simulate what the average normal versus the average toxic player would respond to chat messages.
         It was trained on tribunal data from the game League of Legends. We would also like to include data from other games, like DOTA2.</p>
-    <p>Suggestions: 'we won', 'u suck', 'excuse me', 'stop it', 'SHUT UP', 'i call bullshit', 'kill him!'</p>
+    <p id="credits">Created by Wessel Stoop, Centre for Language & Speech Technology, Radboud University</p>
 </div>
 
 <table id="chatlog">
 </table>
 
-<input id="chat_message_to_send"><input value="Send" type="button" id="sendbutton">
-
+<div id="chat_message_to_send">
+    <input>
+    <div class="namecell you" id="you">You:</div>
+    <p id="suggestions">Suggestions: 'we won', 'u suck', 'excuse me', 'stop it', 'SHUT UP', 'i call bullshit', 'kill him!'</p>
+</div>
 
 </body>
 
